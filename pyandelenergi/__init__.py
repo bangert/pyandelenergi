@@ -1,7 +1,8 @@
 
 from urllib.request import urlopen
-import csv
 from datetime import date, datetime, timedelta
+from decimal import Decimal
+import csv
 
 def get_default_data():
     start_date = get_earliest_start_date()
@@ -22,6 +23,9 @@ def get_max_future_date():
 def build_url(region, start_date, end_date):
     return f"https://andelenergi.dk/?obexport_format=csv&obexport_start={start_date}&obexport_end={end_date}&obexport_region={region}&obexport_tax=0&obexport_product_id=1%231%23TIMEENERGI"
 
+def get_decimal(as_string):
+    return Decimal(as_string.replace(",","."))
+
 def fetch_data(url):
     # download csv
     with urlopen(url) as response:
@@ -39,9 +43,9 @@ def fetch_data(url):
                 if value == "":
                     continue
                 price = dict()
-                price["price"] = r["Elpris"]
-                price["transport_and_tax"] = r["Transport og afgifter"]
-                price["total"] = r["Total"]
+                price["price"] = get_decimal(r["Elpris"])
+                price["transport_and_tax"] = get_decimal(r["Transport og afgifter"])
+                price["total"] = get_decimal(r["Total"])
                 #'02.01.2025 - 00:00'
                 current_date = datetime.strptime(date, "%d.%m.%Y - %H:%M")
 
