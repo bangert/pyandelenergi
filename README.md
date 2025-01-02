@@ -4,7 +4,7 @@ A small python library to access hourly electricity prices from http://andelener
 
 # How to use
 
-See [example/print.py]
+See (example/print.py)
 
 
 # Disclaimer
